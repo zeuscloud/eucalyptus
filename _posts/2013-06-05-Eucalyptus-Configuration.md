@@ -201,9 +201,58 @@ server 2.pool.ntp.org
 `hwclock --systohc`
 * Repeat on each host that will run a Eucalyptus component.
 
-In case if NTP port is blocked you may run your own ntp server by following these steps.
+In case if NTP port is blocked you may run your own ntp server and modify your clients to update from that server.
+To set up your own NTP server, follow these steps :
 
-* 
+* back up your ntp configuration file
+`mv /etc/ntp.conf /etc/ntp.conf.bkp`
 
+* create a new `/etc/ntp.conf` file with the following code in it
+{% highlight bash%}
+# Use the local clock
+server 127.127.1.0 prefer
+fudge  127.127.1.0 stratum 10
+driftfile /var/lib/ntp/drift
+broadcastdelay 0.008
 
+# Give localhost full access rights
+restrict 127.0.0.1
+
+# Give machines on our network access to query us
+restrict 10.0.0.1 mask 255.255.255.0 nomodify notrap
+{% endhighlight %}
+
+* save and close the ntp configuration file
+* restart the ntp daemon
+`service ntpd restart`
+
+* configure ntpd to start at reboot
+`chkconfig ntpd on`
+
+Follow these steps to instruct the clients to use the local NTP server :
+
+* backup the existing ntp configuration file
+`mv /etc/ntp.conf /etc/ntp.conf.bkp`
+
+* create a new ntp configuration file with the following lines in it
+{% highlight bash %}
+# Point to our network's master time server
+server 10.0.0.1
+
+restrict default ignore
+restrict 127.0.0.1
+restrict 10.0.0.1 mask 255.255.255.255 nomodify notrap noquery
+
+driftfile /var/lib/ntp/drift
+{% endlighlight %}
+
+* save and close the ntp configuration file
+* stop running the NTP daemon
+`service ntpd stop`
+* force an update using the local ntp server
+`ntpdate -u 10.0.0.1`
+* start the ntp daemon
+`service ntpd start`
+* configure ntpd to start on reboot
+`chkconfig ntpd on`
 
