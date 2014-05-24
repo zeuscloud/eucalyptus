@@ -23,7 +23,7 @@ VNET_ADDRSPERNET="64"
 VNET_PUBLICIPS="192.168.41.220-192.168.41.230"
 VNET_LOCALIP="192.168.41.203"
 VNET_DHCPDAEMON="/usr/sbin/dhcpd41"
-VNET_DHCPUSER='dhcpd"
+VNET_DHCPUSER="dhcpd"
 {% endhighlight %}
 
 If your NCs are not reachable from end-users directly and the CC has two (or more) Ethernet devices of which one connects to the client/public network and one connects to the NC network, or the single Ethernet device that the CC uses to connect to both clients and NCs is NOT ‘eth0’, then you must also uncomment and set:
