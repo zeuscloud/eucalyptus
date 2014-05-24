@@ -12,8 +12,9 @@ To configure for Managed (No VLAN) mode:
 
 ###CC Configuration
 Important: You must set VNET_PUBLICIPS identically on all CCs in a multi-cluster configuration.
-Log in to the CC and open the /etc/eucalyptus/eucalyptus.conf file.
+Log in to the CC and open the `/etc/eucalyptus/eucalyptus.conf` file.
 Go to the Network Configuration section, uncomment and set the following:
+{% highlight bash %}
 VNET_MODE="MANAGED-NOVLAN"
 VNET_SUBNET="10.0.0.0"
 VNET_NETMASK="255.0.0.0"
@@ -23,10 +24,15 @@ VNET_PUBLICIPS="192.168.41.220-192.168.41.230"
 VNET_LOCALIP="192.168.41.203"
 VNET_DHCPDAEMON="/usr/sbin/dhcpd41"
 VNET_DHCPUSER='dhcpd"
+{% endhighlight %}
+
 If your NCs are not reachable from end-users directly and the CC has two (or more) Ethernet devices of which one connects to the client/public network and one connects to the NC network, or the single Ethernet device that the CC uses to connect to both clients and NCs is NOT ‘eth0’, then you must also uncomment and set:
+{% highlight bash %}
 VNET_PRIVINTERFACE="eth1"
 
 VNET_PUBINTERFACE="eth0"
+{% endhighlight %}
+
 Save the file.
 Repeat on each CC in your system.
 
