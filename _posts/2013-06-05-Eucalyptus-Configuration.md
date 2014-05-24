@@ -183,7 +183,7 @@ To use NTP:
 
 `yum install ntp`
 
-* Open the /etc/ntp.conf file and add NTP servers, as in the following example.
+* Open the `/etc/ntp.conf` file and add NTP servers, as in the following example.
 {% highlight bash %}
 server 0.pool.ntp.org
 server 1.pool.ntp.org
@@ -200,5 +200,10 @@ server 2.pool.ntp.org
 * Synchronize your system clock, so that when your system is rebooted, it does not get out of sync.
 `hwclock --systohc`
 * Repeat on each host that will run a Eucalyptus component.
+
+In case if NTP port is blocked you may run your own ntp server by following these steps.
+
+* 
+
 
 
