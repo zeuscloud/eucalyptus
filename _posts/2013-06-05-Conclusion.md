@@ -5,7 +5,6 @@ category: doc
 date: 2013-06-05 12:00:00
 order: 5
 ---
-###Conclusion 
 We have documented all the parts of our work on a Eucalyptus cloud implementation that we were able to implement successfully.
 However, one of the major issues we faced when trying to install Eucalyptus was the lack of 
 proper documentation. As a result we were never fully able to understand how to integrate
