@@ -100,6 +100,188 @@ iptables -A INPUT -p tcp --dport 0:1023 -j ACCEPT
 
 <h4 id="opening-ports-required-for-dns-functioning">Opening ports required for DNS functioning</h4>
 
+<h3 id="network-configurations-in-main-node-(-cc-/-clc-/-walrus-)">Network Configurations in Main node ( CC / CLC / Walrus )</h3>
+
+<h5 id="eth0---public-network-interface">Eth0 - Public network Interface</h5>
+
+<table border="1">
+    <tr>
+        <td>IP</td>
+        <td>192.168.41.203</td>
+    </tr>
+    <tr>
+        <td>gw</td>
+        <td>192.168.41.1</td>
+    </tr>
+    <tr>
+        <td>dns</td>
+        <td>192.168.254.2</td>
+    </tr>
+    <tr>
+        <td>Netmask</td>
+        <td>24</td>
+    </tr>
+</table>
+
+<h5 id="eth1---private-network-interface">Eth1 - Private network Interface</h5>
+
+<table border="1">
+    <tr>
+        <td>IP</td>
+        <td>10.0.0.1</td>
+    </tr>
+    <tr>
+        <td>gw</td>
+        <td>10.0.0.1</td>
+    </tr>
+    <tr>
+        <td>dns</td>
+        <td>192.168.254.2</td>
+    </tr>
+    <tr>
+        <td>Netmask</td>
+        <td>24</td>
+    </tr>
+</table>
+
+<h3 id="check-network">Check Network</h3>
+
+<h5 id="install-git-and-java">Install git and java</h5>
+
+<div class="highlight"><pre><code class="bash">yum install java-devel git git-core</code></pre></div>
+
+<h5 id="network-check-script">Network Check Script</h5>
+
+<p>Test multicast connectivity between each CLC and Walrus, SC, and VMware broker host.
+* Clone the Eucalyptus deveutils repository</p>
+
+<p><code>git clone https://github.com/eucalyptus/deveutils</code></p>
+
+<ul>
+<li>Run the network-tomography tool on the Cloud Controller, Cluster Controller, Storage Controller, and any
+machines running Walrus or VMware Broker, passing a list of IP addresses for each of these machines.</li>
+</ul>
+
+<div class="highlight"><pre><code class="bash"><span class="nb">cd </span>deveutils/network-tomography
+./network-tomography 10.0.0.1 10.0.0.2</code></pre></div>
+
+<h3 id="configure-dependencies">Configure Dependencies</h3>
+
+<p>Before you install Eucalyptus, make sure you have the following dependencies installed and configured.</p>
+
+<h4 id="configure-bridges">Configure Bridges</h4>
+
+<p>For Managed (No VLAN), Static, and System modes, you must configure a Linux ethernet bridge on all NC machines.This bridge connects your local ethernet adapter to the cluster network. Under normal operation, NCs will attach virtual machine instances to this bridge when the instances are booted.</p>
+
+<p>To configure a bridge in CentOS 6 or RHEL6, you need to create a file with bridge configuration (for example, ifcfg-brX) and modify the file for the physical interface (for example, ifcfg-ethX).</p>
+
+<ul>
+<li>Install the bridge-utils package.</li>
+</ul>
+
+<p><code>yum install bridge-utils</code></p>
+
+<ul>
+<li><p>Go to the <code>/etc/sysconfig/network-scripts</code> directory:
+<code>cd /etc/sysconfig/network-scripts</code></p></li>
+<li><p>Open the network script for the device you are adding to the bridge and add your bridge device to it { the file is usually named as ifcfg-eth0 }. The edited file should look similar to the following:</p></li>
+</ul>
+
+<div class="highlight"><pre><code class="bash"><span class="nv">DEVICE</span><span class="o">=</span>eth0
+<span class="nv">HWADDR</span><span class="o">=</span>00:16:76:D6:C9:45 <span class="c">#change the hardware address </span>
+<span class="nv">ONBOOT</span><span class="o">=</span>yes
+<span class="nv">BRIDGE</span><span class="o">=</span>br0
+<span class="nv">NM_CONTROLLED</span><span class="o">=</span>no</code></pre></div>
+
+<ul>
+<li> Create a new network script in the /etc/sysconfig/network-scripts directory called ifcfg-br0 or something similar. The br0 is the name of the bridge, but this can be anything as long as the name of the file is the same as the DEVICE parameter, and the name is specified correctly in the previously created physical interface
+configuration (ifcfg-ethX).</li>
+</ul>
+
+<div class="highlight"><pre><code class="bash"><span class="nv">DEVICE</span><span class="o">=</span>br0
+<span class="nv">TYPE</span><span class="o">=</span>Bridge
+<span class="nv">BOOTPROTO</span><span class="o">=</span>static
+<span class="nv">IPADDR</span><span class="o">=</span>10.0.0.2
+<span class="nv">NETMASK</span><span class="o">=</span>255.255.255.0
+<span class="nv">GATEWAY</span><span class="o">=</span>10.0.0.1
+<span class="nv">ONBOOT</span><span class="o">=</span>yes</code></pre></div>
+
+<ul>
+<li>Stop the NetworkManager</li>
+</ul>
+
+<p><code>service NetworkManager stop</code></p>
+
+<ul>
+<li>Restart Network</li>
+</ul>
+
+<p><code>service network restart</code></p>
+
+<h3 id="disable-the-firewall">Disable the Firewall</h3>
+
+<p>If you have existing firewall rules on your hosts, you should disable the firewall in order to install Eucalyptus. <strong>You
+should re-enable it after installation.</strong></p>
+
+<p>Tip: If you do not have a firewall enabled, skip this step.</p>
+
+<p>To disable your firewall:</p>
+
+<ul>
+<li>Run the command <code>system-config-firewall-tui</code></li>
+<li>Turn off the Enabled check box.</li>
+</ul>
+
+<p>Repeat on each host that will run a Eucalyptus component: Cloud Controller, Walrus, Cluster Controller, Storage Controller, and Node Controllers.</p>
+
+<h3 id="configure-selinux">Configure SELinux</h3>
+
+<p>Security-enabled Linux (SELinux) is security feature for Linux that allows you to set access control through policies.
+Eucalyptus is not compatible with SELinux. </p>
+
+<p>To configure SELinux to allow Eucalyptus access:</p>
+
+<ul>
+<li>Open <code>/etc/selinux/config</code> and edit the line <code>SELINUX=enforcing</code> to <code>SELINUX=permissive</code>.</li>
+<li>Save the file.</li>
+<li>Run the following command:</li>
+</ul>
+
+<p><code>setenforce 0</code></p>
+
+<h3 id="configure-ntp">Configure NTP</h3>
+
+<p>Eucalyptus requires that each machine have the Network Time Protocol (NTP) daemon started and configured to run
+automatically on reboot.
+To use NTP:</p>
+
+<ul>
+<li>Install NTP on the machines that will host Eucalyptus components.</li>
+</ul>
+
+<p><code>yum install ntp</code></p>
+
+<ul>
+<li>Open the /etc/ntp.conf file and add NTP servers, as in the following example.</li>
+</ul>
+
+<div class="highlight"><pre><code class="bash">server 0.pool.ntp.org
+server 1.pool.ntp.org
+server 2.pool.ntp.org</code></pre></div>
+
+<ul>
+<li>Save and close the file.</li>
+<li>Configure NTP to run at reboot.
+<code>chkconfig ntpd on</code></li>
+<li>Start NTP.
+<code>service ntpd start</code></li>
+<li>Synchronize your server.
+<code>ntpdate -u &lt;your_ntp_server&gt;</code></li>
+<li>Synchronize your system clock, so that when your system is rebooted, it does not get out of sync.
+<code>hwclock --systohc</code></li>
+<li>Repeat on each host that will run a Eucalyptus component.</li>
+</ul>
+
 
                     </div>
                 

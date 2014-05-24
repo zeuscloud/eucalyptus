@@ -82,11 +82,11 @@
 
 <h3 id="creating-a-centos-usb-bootable">Creating a CentOS USB Bootable</h3>
 
-<p>Dowload the script from this link and save it as livecd-iso-to-disk.</p>
+<p>Go to BIOS setting where you set the USB emulating mode to Hard disk</p>
 
-<div class="highlight"><pre><code class="bash">chmod +x live-iso-to-disk
+<p>Write the iso image to USB.</p>
 
-./livecd-iso-to-disk --format --reset-mbr /path-to-iso /dev/path-to-usb</code></pre></div>
+<div class="highlight"><pre><code class="bash">dd <span class="k">if</span><span class="o">=</span>/path-to-iso <span class="nv">of</span><span class="o">=</span>/path-to-usb</code></pre></div>
 
 <ul>
 <li>Write Centos image to a disc, boot into installation mode</li>
@@ -99,12 +99,6 @@
 <li>close the installation window</li>
 <li>user zeus password - spartan</li>
 <li>start ssh server. service start </li>
-</ul>
-
-<h3 id="error-logs">Error Logs</h3>
-
-<ul>
-<li>The installation using a bootable usb didn&#39;t work in DELL 2950 server even though the bootable USB was working well in laptop.</li>
 </ul>
 
 
