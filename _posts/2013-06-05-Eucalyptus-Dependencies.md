@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Eucalyptus Configuration"
+title: "Eucalyptus Dependencies"
 category: doc
 date: 2013-06-05 12:00:00
 order: 2
@@ -266,7 +266,7 @@ Edit the `sysctl.conf` on each machine you plan to install the Cluster Controlle
 To manually enable IP forwarding:
 
 * Enter the following command on the CC:   
-`net.ipv4.ip_forward = 1`     
+`sudo /sbin/sysctl -w net.ipv4.ip_forward=1`     
 
 This ensures that if any dependency (or other unrelated software component) on the system reloads `sysctl.conf` that it won't turn off IP forwarding.
 

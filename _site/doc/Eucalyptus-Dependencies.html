@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <title>Zeus Cloud Eucalyptus Documentation  : Eucalyptus Configuration</title>
+        <title>Zeus Cloud Eucalyptus Documentation  : Eucalyptus Dependencies</title>
         <meta name="description" content="Eucalyptus Cloud">
 
         <link href="/css/bootmin.css" rel="stylesheet">
@@ -42,10 +42,13 @@
             <li data-order="1"><a href="/doc/Installation-Centos.html">Centos 6 OS Installation <br />  </a></li>
         
             
+            <li data-order="4"><a href="/doc/Eucalyptus-configurations.html">Eucalyptus Configurations <br />  </a></li>
+        
+            
             <li data-order="3"><a href="/doc/Eucalyptus-Installation.html">Eucalyptus Installation <br />  </a></li>
         
             
-            <li data-order="2"><a href="/doc/Eucalyptus-Configuration.html">Eucalyptus Configuration <br />  </a></li>
+            <li data-order="2"><a href="/doc/Eucalyptus-Dependencies.html">Eucalyptus Dependencies <br />  </a></li>
         
     
         
@@ -76,7 +79,7 @@
 
                     <div id=content class=span10>
                         <div class=page-header>
-    <h2>Eucalyptus Configuration
+    <h2>Eucalyptus Dependencies
         
     </h2>
 </div>
@@ -357,7 +360,7 @@ To manually enable IP forwarding:</p>
 
 <ul>
 <li>Enter the following command on the CC:<br>
-<code>net.ipv4.ip_forward = 1</code><br></li>
+<code>sudo /sbin/sysctl -w net.ipv4.ip_forward=1</code><br></li>
 </ul>
 
 <p>This ensures that if any dependency (or other unrelated software component) on the system reloads <code>sysctl.conf</code> that it won&#39;t turn off IP forwarding.</p>

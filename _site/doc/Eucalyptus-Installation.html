@@ -42,10 +42,13 @@
             <li data-order="1"><a href="/doc/Installation-Centos.html">Centos 6 OS Installation <br />  </a></li>
         
             
+            <li data-order="4"><a href="/doc/Eucalyptus-configurations.html">Eucalyptus Configurations <br />  </a></li>
+        
+            
             <li data-order="3"><a href="/doc/Eucalyptus-Installation.html">Eucalyptus Installation <br />  </a></li>
         
             
-            <li data-order="2"><a href="/doc/Eucalyptus-Configuration.html">Eucalyptus Configuration <br />  </a></li>
+            <li data-order="2"><a href="/doc/Eucalyptus-Dependencies.html">Eucalyptus Dependencies <br />  </a></li>
         
     
         
@@ -91,6 +94,69 @@
 http://downloads.eucalyptus.com/software/eucalyptus/3.4/centos/6/x86_64/eucalyptus-release-3.4.noarch.rpm</code></pre></div>
 
 <p>Enter y when prompted to install this package.</p>
+
+<ul>
+<li>Configure the Euca2ools package repository on each host that will run a Eucalyptus component or Euca2ools:<br></li>
+</ul>
+
+<div class="highlight"><pre><code class="bash">yum install
+http://downloads.eucalyptus.com/software/euca2ools/3.0/centos/6/x86_64/euca2ools-release-3.0.noarch.rpm</code></pre></div>
+    
+
+<p>Enter y when prompted to install this package.</p>
+
+<ul>
+<li>Configure the EPEL package repository on each host that will run a Eucalyptus component or Euca2ools: </li>
+</ul>
+
+<p><code>yum install http://downloads.eucalyptus.com/software/eucalyptus/3.4/centos/6/x86_64/epel-release-6.noarch.rpm</code>   </p>
+
+<p>Enter y when prompted to install this package.</p>
+
+<ul>
+<li>Configure the ELRepo repository on Main Node:</li>
+</ul>
+
+<p><code>yum install http://downloads.eucalyptus.com/software/eucalyptus/3.4/centos/6/x86_64/elrepo-release-6.noarch.rpm</code>    </p>
+
+<p>Enter y when prompted to install this package.</p>
+
+<ul>
+<li>Install the Eucalyptus node controller software on each planned NC host:</li>
+</ul>
+
+<p><code>yum install eucalyptus-nc</code></p>
+
+<ul>
+<li>Check that the KVM device node has proper permissions.
+Run the following command:<br></li>
+</ul>
+
+<p><code>ls -l /dev/kvm</code></p>
+
+<p>Verify the output shows that the device node is owned by user root and group kvm.   </p>
+
+<p><code>crw-rw-rw- 1 root kvm 10, 232 Nov 30 10:27 /dev/kvm</code></p>
+
+<p>If your kvm device node does not have proper permissions, you need to reboot your NC host.</p>
+
+<ul>
+<li>Install the Eucalyptus cloud controller software on Main Node:</li>
+</ul>
+
+<p><code>yum install eucalyptus-cloud</code></p>
+
+<ul>
+<li>Install the Eucalyptus cloud controller software on main node:</li>
+</ul>
+
+<p><code>yum install eucalyptus-cloud</code></p>
+
+<ul>
+<li>Install the software for the remaining Eucalyptus components in main node.</li>
+</ul>
+
+<p><code>yum install eucalyptus-cc eucalyptus-sc eucalyptus-walrus</code></p>
 
 
                     </div>
