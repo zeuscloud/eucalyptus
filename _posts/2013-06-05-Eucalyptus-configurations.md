@@ -32,10 +32,14 @@ Repeat on each CC in your system.
 
 
 ###NC Configuration
-Log into an NC machine and open the /etc/eucalyptus/eucalyptus.conf file.
+Log into an NC machine and open the `/etc/eucalyptus/eucalyptus.conf` file.
 Go to the Network Configuration section, uncomment and set the following:
+
+{% highlight bash %}
 VNET_MODE="MANAGED-NOVLAN"
-VNET_BRIDGE="[bridge name. Example: br0]"
+VNET_BRIDGE="br0"
+{% endhighlight %}
+
 Save the file.
 Repeat on each NC.
 
