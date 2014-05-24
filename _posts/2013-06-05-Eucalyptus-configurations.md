@@ -15,18 +15,18 @@ Important: You must set VNET_PUBLICIPS identically on all CCs in a multi-cluster
 Log in to the CC and open the /etc/eucalyptus/eucalyptus.conf file.
 Go to the Network Configuration section, uncomment and set the following:
 VNET_MODE="MANAGED-NOVLAN"
-VNET_SUBNET="[Subnet for VMs private IPs. Example: 192.168.0.0]"
-VNET_NETMASK="[Netmask for the vnet_subnet. Example: 255.255.0.0]"
-VNET_DNS="[DNS server IP]"
-VNET_ADDRSPERNET="[Number of simultaneous instances per security group]"
-VNET_PUBLICIPS="[Free public IP 1] [Free public IP 2] ..."
-VNET_LOCALIP="[IP address that other CCs can use to reach this CC]"
-VNET_DHCPDAEMON="[Path to DHCP daemon binary. Example: /usr/sbin/dhcpd3]"
-VNET_DHCPUSER='[DHCP user. Example: dhcpd]"
+VNET_SUBNET="10.0.0.0"
+VNET_NETMASK="255.0.0.0"
+VNET_DNS="10.0.0.1"
+VNET_ADDRSPERNET="64"
+VNET_PUBLICIPS="192.168.41.220-192.168.41.230"
+VNET_LOCALIP="192.168.41.203"
+VNET_DHCPDAEMON="/usr/sbin/dhcpd41"
+VNET_DHCPUSER='dhcpd"
 If your NCs are not reachable from end-users directly and the CC has two (or more) Ethernet devices of which one connects to the client/public network and one connects to the NC network, or the single Ethernet device that the CC uses to connect to both clients and NCs is NOT ‘eth0’, then you must also uncomment and set:
-VNET_PRIVINTERFACE="[Ethernet device on same network as NCs. Example: eth1]"
+VNET_PRIVINTERFACE="eth1"
 
-VNET_PUBINTERFACE="[Ethernet device on ‘public’ network. Example: eth0]"
+VNET_PUBINTERFACE="eth0"
 Save the file.
 Repeat on each CC in your system.
 
