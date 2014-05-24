@@ -203,12 +203,14 @@ server 2.pool.ntp.org
 
 In case if NTP port is blocked you may run your own ntp server and modify your clients to update from that server.
 To set up your own NTP server, follow these steps :
+* * *
+####Do the following in Main Node ( Only if NTP is blocked ) 
 
 * back up your ntp configuration file
 `mv /etc/ntp.conf /etc/ntp.conf.bkp`
 
 * create a new `/etc/ntp.conf` file with the following code in it
-{% highlight bash%}
+{% highlight bash %}
 # Use the local clock
 server 127.127.1.0 prefer
 fudge  127.127.1.0 stratum 10
@@ -228,11 +230,12 @@ restrict 10.0.0.1 mask 255.255.255.0 nomodify notrap
 
 * configure ntpd to start at reboot
 `chkconfig ntpd on`
-
+ * * * 
+####Do the following in Node Controllers ( Only if NTP is blocked ) 
 Follow these steps to instruct the clients to use the local NTP server :
 
 * backup the existing ntp configuration file
-`mv /etc/ntp.conf /etc/ntp.conf.bkp`
+`mv /etc/ntp.conf /etc/ntp.conf.bkp`Follow
 
 * create a new ntp configuration file with the following lines in it
 {% highlight bash %}
@@ -244,7 +247,7 @@ restrict 127.0.0.1
 restrict 10.0.0.1 mask 255.255.255.255 nomodify notrap noquery
 
 driftfile /var/lib/ntp/drift
-{% endlighlight %}
+{% endhighlight %}
 
 * save and close the ntp configuration file
 * stop running the NTP daemon
@@ -255,4 +258,17 @@ driftfile /var/lib/ntp/drift
 `service ntpd start`
 * configure ntpd to start on reboot
 `chkconfig ntpd on`
+* Synchronize your system clock, so that when your system is rebooted, it does not get out of sync.
+`hwclock --systohc`
+
+###Enable IP Forwarding
+Edit the `sysctl.conf` on each machine you plan to install the Cluster Controller (CC) component on. IP forwarding is required for the CC to work.
+To manually enable IP forwarding:
+
+* Enter the following command on the CC:   
+`net.ipv4.ip_forward = 1`     
+
+This ensures that if any dependency (or other unrelated software component) on the system reloads `sysctl.conf` that it won't turn off IP forwarding.
+
+
 

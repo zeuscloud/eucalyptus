@@ -42,6 +42,9 @@
             <li data-order="1"><a href="/doc/Installation-Centos.html">Centos 6 OS Installation <br />  </a></li>
         
             
+            <li data-order="3"><a href="/doc/Eucalyptus-Installation.html">Eucalyptus Installation <br />  </a></li>
+        
+            
             <li data-order="2"><a href="/doc/Eucalyptus-Configuration.html">Eucalyptus Configuration <br />  </a></li>
         
     
@@ -262,7 +265,7 @@ To use NTP:</p>
 <p><code>yum install ntp</code></p>
 
 <ul>
-<li>Open the /etc/ntp.conf file and add NTP servers, as in the following example.</li>
+<li>Open the <code>/etc/ntp.conf</code> file and add NTP servers, as in the following example.</li>
 </ul>
 
 <div class="highlight"><pre><code class="bash">server 0.pool.ntp.org
@@ -281,6 +284,83 @@ server 2.pool.ntp.org</code></pre></div>
 <code>hwclock --systohc</code></li>
 <li>Repeat on each host that will run a Eucalyptus component.</li>
 </ul>
+
+<p>In case if NTP port is blocked you may run your own ntp server and modify your clients to update from that server.
+To set up your own NTP server, follow these steps :</p>
+
+<hr>
+
+<h4 id="do-the-following-in-main-node-(-only-if-ntp-is-blocked-)">Do the following in Main Node ( Only if NTP is blocked )</h4>
+
+<ul>
+<li><p>back up your ntp configuration file
+<code>mv /etc/ntp.conf /etc/ntp.conf.bkp</code></p></li>
+<li><p>create a new <code>/etc/ntp.conf</code> file with the following code in it</p></li>
+</ul>
+
+<div class="highlight"><pre><code class="bash"><span class="c"># Use the local clock</span>
+server 127.127.1.0 prefer
+fudge  127.127.1.0 stratum 10
+driftfile /var/lib/ntp/drift
+broadcastdelay 0.008
+
+<span class="c"># Give localhost full access rights</span>
+restrict 127.0.0.1
+
+<span class="c"># Give machines on our network access to query us</span>
+restrict 10.0.0.1 mask 255.255.255.0 nomodify notrap</code></pre></div>
+
+<ul>
+<li>save and close the ntp configuration file</li>
+<li><p>restart the ntp daemon
+<code>service ntpd restart</code></p></li>
+<li><p>configure ntpd to start at reboot
+<code>chkconfig ntpd on</code></p>
+
+<hr>
+
+<h4 id="do-the-following-in-node-controllers-(-only-if-ntp-is-blocked-)">Do the following in Node Controllers ( Only if NTP is blocked )</h4>
+
+<p>Follow these steps to instruct the clients to use the local NTP server :</p></li>
+<li><p>backup the existing ntp configuration file
+<code>mv /etc/ntp.conf /etc/ntp.conf.bkp</code>Follow</p></li>
+<li><p>create a new ntp configuration file with the following lines in it</p></li>
+</ul>
+
+<div class="highlight"><pre><code class="bash"><span class="c"># Point to our network&#39;s master time server</span>
+server 10.0.0.1
+
+restrict default ignore
+restrict 127.0.0.1
+restrict 10.0.0.1 mask 255.255.255.255 nomodify notrap noquery
+
+driftfile /var/lib/ntp/drift</code></pre></div>
+
+<ul>
+<li>save and close the ntp configuration file</li>
+<li>stop running the NTP daemon
+<code>service ntpd stop</code></li>
+<li>force an update using the local ntp server
+<code>ntpdate -u 10.0.0.1</code></li>
+<li>start the ntp daemon
+<code>service ntpd start</code></li>
+<li>configure ntpd to start on reboot
+<code>chkconfig ntpd on</code></li>
+<li>Synchronize your system clock, so that when your system is rebooted, it does not get out of sync.
+<code>hwclock --systohc</code></li>
+</ul>
+
+<h3 id="enable-ip-forwarding">Enable IP Forwarding</h3>
+
+<p>Edit the <code>sysctl.conf</code> on each machine you plan to install the Cluster Controller (CC) component on. IP forwarding is required for the CC to work.
+To manually enable IP forwarding:</p>
+
+<ul>
+<li>Enter the following command on the CC:<br>
+<code>net.ipv4.ip_forward = 1</code><br></li>
+</ul>
+
+<p>This ensures that if any dependency (or other unrelated software component) on the system reloads <code>sysctl.conf</code> that it won&#39;t turn off IP forwarding.</p>
 
 
                     </div>

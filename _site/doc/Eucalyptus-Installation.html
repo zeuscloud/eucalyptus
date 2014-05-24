@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
 
-        <title>Zeus Cloud Eucalyptus Documentation  : Centos 6 OS Installation</title>
+        <title>Zeus Cloud Eucalyptus Documentation  : Eucalyptus Installation</title>
         <meta name="description" content="Eucalyptus Cloud">
 
         <link href="/css/bootmin.css" rel="stylesheet">
@@ -76,33 +76,21 @@
 
                     <div id=content class=span10>
                         <div class=page-header>
-    <h2>Centos 6 OS Installation
+    <h2>Eucalyptus Installation
         
     </h2>
 </div>
 
-<h3 id="centos-6-installation">Centos 6 Installation</h3>
-
-<h3 id="creating-a-centos-usb-bootable">Creating a CentOS USB Bootable</h3>
-
-<p>Go to BIOS setting where you set the USB emulating mode to Hard disk</p>
-
-<p>Write the iso image to USB.</p>
-
-<div class="highlight"><pre><code class="bash">dd <span class="k">if</span><span class="o">=</span>/path-to-iso <span class="nv">of</span><span class="o">=</span>/path-to-usb</code></pre></div>
+<h2 id="install">Install</h2>
 
 <ul>
-<li>Write Centos image to a disc, boot into installation mode</li>
-<li>Restart the machine after connecting USB</li>
-<li>Press <code>F11</code> to enter boot menu</li>
-<li>Select USB as boot device</li>
-<li>Hostname - zeus</li>
-<li>Root Password - spartan</li>
-<li>Partition - 100GB root, 40GB swap, rest /var</li>
-<li>close the installation window</li>
-<li>user zeus password - spartan</li>
-<li>start ssh server. service start </li>
+<li> Configure the Eucalyptus package repository on each host that will run a Eucalyptus component:</li>
 </ul>
+
+<div class="highlight"><pre><code class="bash">yum install
+http://downloads.eucalyptus.com/software/eucalyptus/3.4/centos/6/x86_64/eucalyptus-release-3.4.noarch.rpm</code></pre></div>
+
+<p>Enter y when prompted to install this package.</p>
 
 
                     </div>
